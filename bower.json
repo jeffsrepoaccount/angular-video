@@ -1,0 +1,27 @@
+{
+  "name": "angular-video",
+  "version": "0.0.1",
+  "homepage": "https://github.com/jeffsrepoaccount/angular-video",
+  "authors": [
+    "Jeff Lambert <jefflikeschicken@gmail.com>"
+  ],
+  "description": "AngularJS directive for playing HTML5 video sources",
+  "main": "./dist/angular-video.min.js",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "angularjs",
+    "video",
+    "html5"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/bower_components",
+    "test",
+    "tests"
+  ]
+}
