@@ -13,6 +13,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-banner');
 
@@ -41,7 +42,7 @@ module.exports = function(grunt) {
                     expand: true,
                     flatten: true,
                     dest: './dist/',
-                    src: [ './src/*.css' ]
+                    src: [ './tmp/*.css' ]
                 }]
             }
         },
@@ -50,7 +51,7 @@ module.exports = function(grunt) {
                 files: [{
                     dot: true,
                     src: [
-                        './dist/*', './tmp/*'
+                        './dist/*', 
                     ]
                 }]
             },
@@ -67,7 +68,7 @@ module.exports = function(grunt) {
                 banner: '/*! <%= pkg.name %>, built <%= grunt.template.today("isoDateTime") %> */',
                 linebreak: true
             },
-            src: [ './dist/*.js' ]
+            src: [ './dist/*' ]
         },
         uglify: {
             js: {
@@ -78,6 +79,13 @@ module.exports = function(grunt) {
                     mangle: false
                 }
             }
+        },
+        cssmin: {
+            build: {
+                files: {
+                    './tmp/angular-video.min.css': [ './src/angular-video.css' ]
+                }
+            }
         }
     });
 
@@ -85,10 +93,11 @@ module.exports = function(grunt) {
         grunt.task.run([
             'clean:dist',
             'uglify:js',
+            'cssmin:build',
             'copy:js',
+            'copy:css',
             'usebanner',
             'copy:html',
-            'copy:css',
             'clean:cleanup'
         ]);
     });
