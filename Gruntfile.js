@@ -27,6 +27,14 @@ module.exports = function(grunt) {
                     dest: './dist/',
                     src: [ './tmp/*' ]
                 }]
+            },
+            html: {
+                files: [{
+                    expand: true,
+                    flatten: true,
+                    dest: './dist/',
+                    src: [ './src/*.html' ]
+                }]
             }
         },
         clean: {
@@ -34,8 +42,14 @@ module.exports = function(grunt) {
                 files: [{
                     dot: true,
                     src: [
-                        './dist/*'
+                        './dist/*', './tmp/*'
                     ]
+                }]
+            },
+            cleanup: {
+                files: [{
+                    dot: true,
+                    src: [ './tmp' ]
                 }]
             }
         },
@@ -45,10 +59,13 @@ module.exports = function(grunt) {
                 banner: '/*! <%= pkg.name %>, built <%= grunt.template.today("isoDateTime") %> */',
                 linebreak: true
             },
-            src: [ './tmp/*' ]
+            src: [ './dist/*.js' ]
         },
         uglify: {
             js: {
+                files: {
+                    './tmp/angular-video.min.js': [ './src/*.js' ]
+                },
                 options: {
                     mangle: false
                 }
@@ -59,10 +76,11 @@ module.exports = function(grunt) {
     grunt.registerTask('build', function() {
         grunt.task.run([
             'clean:dist',
-            'concat:js',
             'uglify:js',
             'copy:js',
-            'usebanner'
+            'usebanner',
+            'copy:html',
+            'clean:cleanup'
         ]);
     });
 
