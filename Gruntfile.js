@@ -35,6 +35,14 @@ module.exports = function(grunt) {
                     dest: './dist/',
                     src: [ './src/*.html' ]
                 }]
+            },
+            css: {
+                files: [{
+                    expand: true,
+                    flatten: true,
+                    dest: './dist/',
+                    src: [ './src/*.css' ]
+                }]
             }
         },
         clean: {
@@ -80,6 +88,7 @@ module.exports = function(grunt) {
             'copy:js',
             'usebanner',
             'copy:html',
+            'copy:css',
             'clean:cleanup'
         ]);
     });
