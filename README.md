@@ -49,4 +49,4 @@ module.controller('MyCtrl', [
 
 ## License
 
-This package is licensed under the [MIT License](https://opensource.org/licenses/MIT). For full details refer to LICENSE
+This package is licensed under the [MIT License](https://opensource.org/licenses/MIT). For full details refer to [LICENSE](https://raw.githubusercontent.com/jeffsrepoaccount/angular-video/master/LICENSE)
