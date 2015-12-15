@@ -6,7 +6,7 @@ Easy to use Angular JS directive for playing HTML5 video sources.
 ```javascript
 var module = angular.module('myApp', ['jrl-video']);
 module.controller('MyCtrl', [
-    // HtmlPlayer service is provided by the video player
+    // HtmlPlayer service is provided by jrl-video
     '$scope', 'HtmlPlayer',
     function($scope, HtmlPlayer) {
         $scope.player = HtmlPlayer;
@@ -25,7 +25,7 @@ module.controller('MyCtrl', [
 ## Markup
 
 ```html
-<link type="text/css" src="/bower_components/jeffsrepoaccount/angular-video/dist/angular-video.css" />
+<link type="text/css" src="/bower_components/jeffsrepoaccount/angular-video/dist/angular-video.min.css" />
 <script type="text/javascript" src="/bower_components/jeffsrepoaccount/angular-video/dist/angular-video.min.js"></script>
 
 <jrl-video-player 
