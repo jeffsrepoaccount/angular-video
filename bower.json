@@ -23,5 +23,8 @@
     "public/bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "dependencies": {
+    "font-awesome": "~4.5.0"
+  }
 }

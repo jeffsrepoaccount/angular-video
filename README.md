@@ -25,8 +25,8 @@ module.controller('MyCtrl', [
 ## Markup
 
 ```html
-<link type="text/css" src="/bower_components/jeffsrepoaccount/angular-video/dist/angular-video.min.css" />
-<script type="text/javascript" src="/bower_components/jeffsrepoaccount/angular-video/dist/angular-video.min.js"></script>
+<link type="text/css" src="/bower_components/angular-video/dist/angular-video.min.css" />
+<script type="text/javascript" src="/bower_components/angular-video/dist/angular-video.min.js"></script>
 
 <jrl-video-player 
     data-video="video"
@@ -47,6 +47,18 @@ module.controller('MyCtrl', [
 </jrl-video-player>
 ```
 
+## Installation
+
+Install via bower:
+
+```bash
+$ bower install jeffsrepoaccount/angular-video -S
+```
+
 ## License
 
 This package is licensed under the [MIT License](https://opensource.org/licenses/MIT). For full details refer to [LICENSE](https://raw.githubusercontent.com/jeffsrepoaccount/angular-video/master/LICENSE)
+
+## Known Issues
+
+- CSS for controls breaks around 435px width, so more work is needed for smaller device support

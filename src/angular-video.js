@@ -1,3 +1,16 @@
+/**
+ * angular-video
+ *
+ * Provides the following angular components:
+ *
+ * jrl-video-player (directive)
+ * jrl-video-controls (directive)
+ * jrl-video-button-volume (directive)
+ * Html5Player (service)
+ *
+ * @author Jeff Lambert
+ */
+
 (function() {
     'use strict';
     // Usage:
@@ -10,12 +23,16 @@
     //  data-muted="true|false"
     //  data-loop="true|false"
     var module = angular.module('jrl-video', []);
-    
-    module.paths = {
-        root: '/js/demos/video-player/src/'
-    };
 
-    module.constant('JRL_VIDEO_ROOT', module.paths.root);
+    // To be able to link templates correctly in different enviornments,
+    // determine currently executing path and define that to be the 
+    // relative root
+    // Adapted From: http://stackoverflow.com/a/2255727/697370 @InfinitiesLoop
+    var scripts = document.getElementsByTagName("script"),
+        src = scripts[scripts.length-1].src.split(/[\\/]/);
+    src.pop();
+
+    module.constant('JRL_VIDEO_ROOT', src.join('/') + '/');
 
     module.directive('jrlVideoPlayer', [
             '$timeout', 'JRL_VIDEO_ROOT',
@@ -39,7 +56,6 @@
                 function link(scope, element, attrs) {
                     var $video = element.find('video');
                     scope.player.init(element, $video)
-                    //scope.$apply();
 
                     if(scope.autoplay) {
                         $video.attr('autoplay', true);
