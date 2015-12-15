@@ -1,0 +1,15 @@
+<section class="video-player">
+        <video>
+            <source 
+                data-ng-repeat="source in video.sources" 
+                type="{{source[0]}}" 
+                data-ng-src="{{source[1]}}">
+            </source>
+        </video>
+
+        <jrl-video-controls
+            data-ng-show="controls"
+            data-video="video"
+            data-player="player">
+        </jrl-video-controls>
+</section>

@@ -1,0 +1,48 @@
+<div class="video-controls">
+    <!-- Play / Pause Control -->
+    <div class="video-button-control play" 
+        data-ng-click="togglePlayback()">
+
+        <i class="fa fa-play" data-ng-show="player.isPaused"></i>
+        <i class="fa fa-pause" data-ng-show="!player.isPaused"></i>
+    </div>
+    <!-- Time Counter -->
+    <div class="time-counter">
+        <span>{{ formatTime(player.currentTime) }}</span> / 
+        <span>{{ formatTime(player.duration) }}</span>
+    </div>
+    <!-- Fullscreen Control -->
+    <div class="video-button-control fullscreen" 
+        data-ng-show="player.supportsFullscreen()"
+        data-ng-click="toggleFullscreen()">
+
+        <i class="fa fa-expand" data-ng-show="!player.isFullscreen"></i>
+        <i class="fa fa-compress" data-ng-show="player.isFullscreen"></i>
+    </div>
+
+    <!-- Volume Control -->
+    <jrl-video-button-volume class="video-button-control volume"
+        data-player="player">
+    </jrl-video-button-volume>
+
+    <!-- Skip Buttons -->
+    <div class="video-button-control skip-fwd" 
+        data-ng-click="skip(+10)">
+
+        <i class="fa fa-fast-forward"></i>
+    </div>
+
+    <div class="video-button-control skip-back" 
+        data-ng-click="skip(-10)">
+        
+        <i class="fa fa-fast-backward"></i>
+    </div>
+
+    <!-- Buffer / Progress Track -->
+    <div class="video-track" 
+        data-ng-click="seek($event)">
+        
+        <div class="video-buffer"></div>
+        <div class="video-progress" data-ng-style="progressStyle"></div>
+    </div>
+</div>

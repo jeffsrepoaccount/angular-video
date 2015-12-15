@@ -1,0 +1,21 @@
+{
+  "name": "angular-video",
+  "version": "0.0.1",
+  "description": "Easy to use Angular JS directive for utilizing video in your Angular applications",
+  "main": "Gruntfile.js",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jeffsrepoaccount/angular-video.git"
+  },
+  "keywords": [
+    "angular",
+    "video",
+    "directive"
+  ],
+  "author": "Jeff Lambert",
+  "license": "MIT",
+  "readmeFilename": "README.md"
+}

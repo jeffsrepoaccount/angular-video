@@ -1,0 +1,11 @@
+<div data-ng-click="toggleMute()">
+    <i class="fa fa-volume-up" data-ng-show="player.volume >= 0.70 && !player.video.muted"></i>
+    <i class="fa fa-volume-down" data-ng-show="player.volume >= 0.30 && player.volume < 0.70 && !player.video.muted"></i>
+    <i class="fa fa-volume-off" data-ng-show="player.volume < 0.30 || player.video.muted"></i>
+
+    <div class="volume-container">
+        <div class="volume-bar" data-ng-click="setVolume($event)">
+            <div class="volume-bar-setting"></div>
+        </div>
+    </div>
+</div>
