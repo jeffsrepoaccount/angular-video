@@ -22,7 +22,7 @@
     //  data-autoplay="true|false"
     //  data-muted="true|false"
     //  data-loop="true|false"
-    var module = angular.module('jrl-video', []);
+    var module = angular.module('jrl-video', ['ngAnimate']);
 
     // To be able to link templates correctly in different enviornments,
     // determine currently executing path and define that to be the 
@@ -35,8 +35,8 @@
     module.constant('JRL_VIDEO_ROOT', src.join('/') + '/');
 
     module.directive('jrlVideoPlayer', [
-            '$timeout', 'JRL_VIDEO_ROOT',
-            function($timeout, JRL_VIDEO_ROOT) {
+            '$timeout', 'jrlKeyboardControls', 'jrlTouchControls', 'JRL_VIDEO_ROOT',
+            function($timeout, jrlKeyboardControls, jrlTouchControls, JRL_VIDEO_ROOT) {
                 return {
                     link: link,
                     restrict: 'E',
@@ -54,7 +54,15 @@
                 };
 
                 function link(scope, element, attrs) {
+                    // Default shouldShowControls to equal whether current
+                    // video should be showing controls at all
+                    scope.shouldShowControls = scope.controls;
+
                     var $video = element.find('video');
+
+                    scope.playerControls = isTouchDevice() ?//true ? //
+                            jrlTouchControls : jrlKeyboardControls
+                    ;
                     scope.player.init(element, $video)
 
                     if(scope.autoplay) {
@@ -69,29 +77,21 @@
                         scope.player.toggleMute();
                     }
 
+                    // Registers the controls for UI interactions
                     if(scope.controls !== 'undefined' && scope.controls) {
-                        var timeoutPromise;
-                        element.hover(
-                            function() {
-                                if(timeoutPromise) {
-                                    $timeout.cancel(timeoutPromise);
-                                }
-                                var controls = $video.parent().find('.video-controls');
-                                controls.stop(true,true).fadeIn(1000);
-                            },
-                            function(e) {
-                                timeoutPromise = $timeout(function() {
-                                    var controls = $video.parent().find('.video-controls');
-                                    controls.stop(true,true).fadeOut(1000);
-                                }, 750);
-                            }
-                        );    
+                        scope.playerControls.init(element, setControlVisibility);
                     }
 
+                    // Any click on the video by default is going to toggle 
+                    // the playback
                     $video.on('click', function() {
                         scope.player.togglePlayback();
                     });
-                    
+                
+                    function setControlVisibility(shouldShow) {
+                        scope.shouldShowControls = shouldShow;
+                        $timeout(function() { scope.$apply(); });
+                    }
                 }
             }
         ])
@@ -104,7 +104,8 @@
                     templateUrl: JRL_VIDEO_ROOT + 'controls.html',
                     scope: {
                         video: '=',
-                        player: '='
+                        player: '=',
+                        controls: '='
                     },
                     replace: true,
                 };
@@ -124,7 +125,6 @@
                     scope.player.video[0].addEventListener('ended', playbackComplete);
 
                     var $progressContainer = element.find('.video-track');
-
 
                     function durationChange() {
                         scope.player.durationChange();
@@ -146,6 +146,10 @@
 
                     function toggleFullscreen() {
                         scope.player.toggleFullscreen();
+                        scope.controls.hide();
+                        element.parent().mousemove(function() {
+                            scope.controls.show();
+                        });
                     }
 
                     function seek(e) {
@@ -180,6 +184,41 @@
                 }
             }
         ])
+        .directive('jrlVideoPlayButton', [
+            'JRL_VIDEO_ROOT',
+            function(JRL_VIDEO_ROOT) {
+                return {
+                    link: link,
+                    restrict: 'E',
+                    templateUrl: JRL_VIDEO_ROOT + 'play.html',
+                    scope: {
+                        player: '=',
+                    },
+                    replace: true
+                };
+
+                function link(scope, element, attrs) {
+                    scope.play = play;
+
+                    scope.$watch(
+                        function() { return scope.player.isPaused; },
+                        function(newVal) {
+                            if(!newVal) {
+                                element.show();
+                            } else {
+                                element.hide();
+                            }
+                        }
+                    );
+
+                    function play($e) {
+                        scope.player.togglePlayback();
+                        $e.preventDefault();
+                        return false;
+                    }
+                }
+            }
+        ])
         .directive('jrlVideoButtonVolume', [
             '$timeout', 'JRL_VIDEO_ROOT',
             function($timeout, JRL_VIDEO_ROOT) {
@@ -189,11 +228,13 @@
                     templateUrl: JRL_VIDEO_ROOT + 'volume.html',
                     link: link,
                     scope: {
-                        player: '='
+                        player: '=',
+                        controls: '='
                     }
                 }
 
                 function link(scope, element, attrs) {
+                    scope.showVolumeCtrl = false;
                     scope.setVolume = setVolume;
                     scope.toggleMute = toggleMute;
 
@@ -202,19 +243,18 @@
                         $volumeSetting = element.find('.volume-bar-setting'),
                         mouseClicking = false;
 
-                    element.hover(
-                        function() {
-                            $container.stop(true, false).slideDown('fast').fadeIn('fast');
-                        }, function() {
-                            $container.stop(true, false).slideUp('fast').fadeOut('fast');
-                        }
-                    );
+                    scope.controls.registerVolumeBtn(element, $volumeBar, setBarVisibility, setVolume);
 
                     scope.$watch(function() { return scope.player.volume; },
                         function(newVal) {
                             $volumeSetting.css({height: $volumeBar.height() * newVal});
                         }
                     );
+
+                    function setBarVisibility(shouldShow) {
+                        scope.showVolumeCtrl = shouldShow;
+                        scope.$apply();
+                    }
 
                     function setVolume(e) {
                         var containerHeight = $volumeBar.height(),
@@ -228,21 +268,6 @@
                         scope.player.toggleMute();
                         $timeout(function() { scope.$apply(); });
                     }
-
-                    $volumeBar.mousemove(function(e) {
-                        if(mouseClicking) {
-                            setVolume(e);
-                            scope.$apply();
-                        }
-                    })
-
-                    $volumeBar.mousedown(function() {
-                        mouseClicking = true;
-                    });
-
-                    $volumeBar.mouseup(function() {
-                        mouseClicking = false;
-                    });
                 }
             }
         ])
@@ -304,7 +329,6 @@
                         document.webkitFullscreenElement ||
                         document.mozFullScreenElement ||
                         document.msFullscreenElement;
-                    $rootScope.$apply();
                 }
 
                 function toggleMute() {
@@ -325,6 +349,7 @@
                     }
                     // Return whether or not the video is currently playing,
                     // update isPaused status
+                    setTimeout(function() { $rootScope.$apply(); });
                     return !(svc.isPaused = !svc.isPaused);
                 }
 
@@ -394,5 +419,125 @@
                 }
             }
         ])
+
+        // Video Control Services - Two different services with identical signatures designed to  
+        // allow for different usage patterns for the different available hardware inputs
+        // e.g. clicking a volume button to toggle mute (desktop) vs 
+        //          showing the volume slide control (touch)
+        .service('jrlTouchControls', [
+            function() {
+                var showCtrl, 
+                    svc = {
+                        hide: hide,
+                        show: show,
+                        init: init,
+                        registerVolumeBtn: registerVolumeBtn
+                    }
+                ;
+
+                return svc;
+
+                function hide() {
+                    showCtrl(false);
+                }
+
+                function show() {
+                    showCtrl(true);
+                }
+
+                function init(element, $video, toggleCtrl) {
+                    showCtrl = toggleCtrl;
+                    var showing = false;
+                    element.on('click', function() {
+                        showing = !showing;
+                        toggleCtrl(showing);
+                    });
+                }
+
+                function registerVolumeBtn(element, $volumeBar, toggleVolumeBar, setVolume) {
+                    var showing = false;
+                    element.click(function() {
+                        console.log('volume button click');
+                    });
+
+                    $volumeBar.click(function(e) {
+                        setVolume(e);
+                    });
+                }
+            }
+        ])
+        .service('jrlKeyboardControls', [
+            '$timeout',
+            function($timeout) {
+                var showCtrl, 
+                    svc = {
+                        hide: hide,
+                        show: show,
+                        init: init,
+                        registerVolumeBtn: registerVolumeBtn
+                    }
+                ;
+
+                return svc;
+
+                function hide() {
+                    showCtrl(false);
+                }
+
+                function show() {
+                    showCtrl(true);
+                }
+
+                function init(element, toggleCtrl) {
+                    var timeoutPromise;
+                    showCtrl = toggleCtrl;
+                    element.hover(
+                        function() {
+                            if(timeoutPromise) {
+                                $timeout.cancel(timeoutPromise);
+                            }
+
+                            show();
+                        },
+                        function(e) {
+                            timeoutPromise = $timeout(function() {
+                                hide();
+                            }, 750);
+                        }
+                    );
+                }
+
+                function registerVolumeBtn(element, $volumeBar, toggleVolumeBar, setVolume) {
+                    var mouseClicking = false;
+                    element.hover(
+                        function() {
+                            toggleVolumeBar(true);
+                        }, function() {
+                            toggleVolumeBar(false);
+                        }
+                    );
+
+                    $volumeBar.mousemove(function(e) {
+                        if(mouseClicking) {
+                            setVolume(e);
+                        }
+                    })
+
+                    $volumeBar.mousedown(function() {
+                        mouseClicking = true;
+                    });
+
+                    $volumeBar.mouseup(function() {
+                        mouseClicking = false;
+                    });
+                }
+            }
+        ])
     ;
+
+    // From @blmstr: http://stackoverflow.com/a/4819886/697370
+    function isTouchDevice() {
+        return 'ontouchstart' in window // works on most browsers 
+            || navigator.maxTouchPoints;
+    }
 })();

@@ -8,8 +8,15 @@
         </video>
 
         <jrl-video-controls
-            data-ng-show="controls"
+            data-ng-show="shouldShowControls"
+            data-controls="playerControls"
             data-video="video"
             data-player="player">
         </jrl-video-controls>
+
+        <jrl-video-play-button
+            data-controls="playerControls"
+            data-player="player"
+            data-ng-show="!controls">
+        </jrl-video-play-button>
 </section>

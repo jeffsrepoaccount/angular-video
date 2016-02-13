@@ -1,12 +1,9 @@
 /**
  * Streaming Gruntfile
  *
- * Usage: grunt build:<environment>
- *
- * <environment> is one of:
- *  develop
- *  staging
- *  production
+ * Usage: 
+ *  grunt build
+ *  grunt test
  */
 module.exports = function(grunt) {
 
