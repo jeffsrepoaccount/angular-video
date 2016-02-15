@@ -2,7 +2,7 @@ section.video-player {
     position: relative;
     background: #000;
     width: 100%;
-    min-width: 290px;
+    min-width: 270px;
     height: auto;
     height: 100%;
     line-height: normal;
@@ -233,12 +233,11 @@ video source {
 
 .headless-play-btn {
     position: absolute;
-    display: table-cell;
     z-index: 100;
     font-size: 5em;
-    width: 100%; height: 100%;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
     text-align: center;
-    top: 0;
     line-height: normal;
 }
 

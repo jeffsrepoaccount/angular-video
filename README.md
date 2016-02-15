@@ -59,6 +59,3 @@ $ bower install jeffsrepoaccount/angular-video -S
 
 This package is licensed under the [MIT License](https://opensource.org/licenses/MIT). For full details refer to [LICENSE](https://raw.githubusercontent.com/jeffsrepoaccount/angular-video/master/LICENSE)
 
-## Known Issues
-
-- CSS for controls breaks around 435px width, so more work is needed for smaller device support
