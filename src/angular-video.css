@@ -252,6 +252,10 @@ video source {
 }
 
 @media all and (max-width: 480px) {
+    :-webkit-full-screen { padding-top: 25%; }
+    :-moz-full-screen { margin-top: 25%; }
+    :full-screen { margin-top: 25%; }
+    
     .video-button-control {
         width: 25px;
         height: 25px;
@@ -263,11 +267,5 @@ video source {
         margin: 0;
         bottom: 25px;
         left: 2px;
-    }
-}
-
-@media all and (max-width: px) {
-    .headless-play-btn {
-        font-size: 7em;
     }
 }
