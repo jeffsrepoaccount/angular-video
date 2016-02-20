@@ -252,10 +252,10 @@ video source {
 }
 
 @media all and (max-width: 480px) {
-    :-webkit-full-screen { padding-top: 25%; }
-    :-moz-full-screen { margin-top: 25%; }
-    :full-screen { margin-top: 25%; }
-    
+    :-webkit-full-screen { margin-top: 50%; }
+    :-moz-full-screen { margin-top: 50%; }
+    :full-screen { margin-top: 50%; }
+
     .video-button-control {
         width: 25px;
         height: 25px;
