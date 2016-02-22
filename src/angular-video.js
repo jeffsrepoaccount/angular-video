@@ -65,7 +65,7 @@
                     ;
                     scope.player.init(element, $video)
 
-                    if(scope.autoplay) {
+                    if(scope.autoplay && !isTouchDevice()) {
                         $video.attr('autoplay', true);
                     }
 
@@ -201,9 +201,9 @@
                     scope.play = play;
 
                     scope.$watch(
-                        function() { return scope.player.isPaused; },
+                        function() { return scope.player.video[0].paused; },
                         function(newVal) {
-                            if(!newVal) {
+                            if(scope.player.video[0].paused) {
                                 element.show();
                             } else {
                                 element.hide();
@@ -350,7 +350,7 @@
                     // Return whether or not the video is currently playing,
                     // update isPaused status
                     setTimeout(function() { $rootScope.$apply(); });
-                    return !(svc.isPaused = !svc.isPaused);
+                    return svc.isPaused = svc.video[0].paused;
                 }
 
                 function supportsFullscreen() {
