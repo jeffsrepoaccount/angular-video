@@ -62,7 +62,7 @@ module.exports = function(grunt) {
         usebanner: {
             options: {
                 position: 'top',
-                banner: '/*! <%= pkg.name %>, built <%= grunt.template.today("isoDateTime") %> */',
+                banner: '/*! <%= pkg.name %>, built <%= grunt.template.today("isoDateTime") %> | (C) <%= grunt.template.today("yyyy") %> Jeff Lambert | License: MIT */',
                 linebreak: true
             },
             src: [ './dist/*' ]
