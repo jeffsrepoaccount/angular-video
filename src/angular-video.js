@@ -9,6 +9,7 @@
  * Html5Player (service)
  *
  * @author Jeff Lambert
+ * @license MIT
  */
 
 (function() {
@@ -58,14 +59,16 @@
                     // video should be showing controls at all
                     scope.shouldShowControls = scope.controls;
 
-                    var $video = element.find('video');
+                    var $video = element.find('video'),
+                        isTouch = isTouchDevice()
+                    ;
 
-                    scope.playerControls = isTouchDevice() ?//true ? //
+                    scope.playerControls = isTouch ?//true ? //
                             jrlTouchControls : jrlKeyboardControls
                     ;
                     scope.player.init(element, $video)
 
-                    if(scope.autoplay && !isTouchDevice()) {
+                    if(scope.autoplay && !isTouch) {
                         $video.attr('autoplay', true);
                     }
 
@@ -82,8 +85,6 @@
                         scope.playerControls.init(element, setControlVisibility);
                     }
 
-                    // Any click on the video by default is going to toggle 
-                    // the playback
                     $video.on('click', function() {
                         scope.player.togglePlayback();
                     });
@@ -112,14 +113,14 @@
 
                 function link(scope, element, attrs) {
                     // Control interface actions
-                    scope.togglePlayback = togglePlayback;
-                    scope.toggleFullscreen = toggleFullscreen;
-                    scope.seek = seek;
-                    scope.formatTime = formatTime;
-                    scope.skip = skip;
-                    scope.progressStyle = { width: '0' };
+                    scope.togglePlayback    = togglePlayback;
+                    scope.toggleFullscreen  = toggleFullscreen;
+                    scope.seek              = seek;
+                    scope.formatTime        = formatTime;
+                    scope.skip              = skip;
+                    scope.progressStyle     = { width: '0' };
 
-                    // TODO: Move this to player
+                    // TODO: Figure out a way to move this to player
                     scope.player.video[0].addEventListener('durationchange', durationChange);
                     scope.player.video[0].addEventListener('timeupdate', timeUpdate);
                     scope.player.video[0].addEventListener('ended', playbackComplete);
@@ -200,6 +201,8 @@
                 function link(scope, element, attrs) {
                     scope.play = play;
 
+                    // This is fugly, but for some reason scope updates were 
+                    // not binding correctly on touch devices
                     scope.$watch(
                         function() { return scope.player.video[0].paused; },
                         function(newVal) {
@@ -262,6 +265,7 @@
 
                         scope.player.changeVolume((containerHeight - relY) / containerHeight);
                         e.stopPropagation();
+                        $timeout(function() { scope.$apply(); });
                     }
 
                     function toggleMute() {
@@ -309,6 +313,7 @@
 
                     svc.element = element;
                     svc.video = video;
+                    // I HATE LOUD NOISES!!!
                     svc.changeVolume(0.5);
                 }
 
@@ -349,6 +354,7 @@
                     }
                     // Return whether or not the video is currently playing,
                     // update isPaused status
+                    // I can't remember why I need an $apply here...
                     setTimeout(function() { $rootScope.$apply(); });
                     return svc.isPaused = svc.video[0].paused;
                 }
@@ -446,18 +452,14 @@
                 }
 
                 function init(element, $video, toggleCtrl) {
-                    showCtrl = toggleCtrl;
-                    var showing = false;
-                    element.on('click', function() {
-                        showing = !showing;
-                        toggleCtrl(showing);
-                    });
+                    showCtrl = toggleCtrl;   
                 }
 
                 function registerVolumeBtn(element, $volumeBar, toggleVolumeBar, setVolume) {
                     var showing = false;
                     element.click(function() {
-                        console.log('volume button click');
+                        showing = !showing;
+                        toggleVolumeBar(showing);
                     });
 
                     $volumeBar.click(function(e) {
@@ -470,10 +472,11 @@
             '$timeout',
             function($timeout) {
                 var showCtrl, 
+                    mouseClicking = false,
                     svc = {
                         hide: hide,
-                        show: show,
                         init: init,
+                        show: show,
                         registerVolumeBtn: registerVolumeBtn
                     }
                 ;
@@ -489,33 +492,30 @@
                 }
 
                 function init(element, toggleCtrl) {
-                    var timeoutPromise;
                     showCtrl = toggleCtrl;
-                    element.hover(
-                        function() {
-                            if(timeoutPromise) {
-                                $timeout.cancel(timeoutPromise);
-                            }
-
-                            show();
-                        },
-                        function(e) {
-                            timeoutPromise = $timeout(function() {
-                                hide();
-                            }, 750);
-                        }
-                    );
                 }
 
                 function registerVolumeBtn(element, $volumeBar, toggleVolumeBar, setVolume) {
-                    var mouseClicking = false;
+                    var timeoutPromise;
+
                     element.hover(
                         function() {
                             toggleVolumeBar(true);
                         }, function() {
-                            toggleVolumeBar(false);
+                            //toggleVolumeBar(false);
+                            timeoutPromise = $timeout(runHide, 50);
                         }
                     );
+
+                    function runHide() {
+                        $timeout.cancel(timeoutPromise);
+                        if(mouseClicking) {
+                            timeoutPromise = $timeout(runHide, 50);
+                        } else {
+                            toggleVolumeBar(false);
+                        }
+                    
+                    }
 
                     $volumeBar.mousemove(function(e) {
                         if(mouseClicking) {
@@ -527,9 +527,9 @@
                         mouseClicking = true;
                     });
 
-                    $volumeBar.mouseup(function() {
+                    angular.element('body').on('mouseup', function() {
                         mouseClicking = false;
-                    });
+                    })
                 }
             }
         ])

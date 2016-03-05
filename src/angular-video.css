@@ -125,29 +125,39 @@ video source {
     height: 100px;
     position: absolute;
     bottom: 35px;
-    width: 20px;
-    left: 0px;
+    width: 14px;
+    left: 2px;
     background: #000;
     padding: 0; margin: 0;
     margin-left: 8px;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+
+    -webkit-box-shadow: 0px 0px 2px 1px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 2px 1px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 2px 1px rgba(0,0,0,0.75);
 }
 
 .volume-bar {
     position: absolute;
-    height: 95px;
+    height: 99px;
     width: 12px;
     background: #777;
     padding: 0; margin: 0;
-    margin-left: 4px;
+    margin-left: 1px;
     bottom: 0px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
 
     -webkit-transition: all 0.5s ease;
     -moz-transition: all 0.5s ease;
     -o-transition: all 0.5s ease;
     -ms-transition: all 0.5s ease;
     transition: all 0.5s ease;
+
+    -webkit-box-shadow: 0px 0px 2px 1px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 2px 1px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 2px 1px rgba(0,0,0,0.75);
 }
 
 .volume-bar:hover {
