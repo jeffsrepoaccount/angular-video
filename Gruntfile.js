@@ -1,5 +1,5 @@
 /**
- * Streaming Gruntfile
+ * Gruntfile
  *
  * Usage: 
  *  grunt build
