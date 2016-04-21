@@ -1,5 +1,5 @@
 /**
- * Gruntfile
+ * Streaming video player Gruntfile
  *
  * Usage: 
  *  grunt build
