@@ -6,7 +6,7 @@
     "Jeff Lambert <jefflikeschicken@gmail.com>"
   ],
   "description": "AngularJS directive for playing HTML5 video sources",
-  "main": "./dist/angular-video.min.js",
+  "main": "./src/angular-video.js",
   "moduleType": [
     "globals"
   ],
