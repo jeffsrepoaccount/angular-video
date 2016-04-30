@@ -1,6 +1,6 @@
 {
   "name": "angular-video",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Easy to use Angular JS directive for utilizing video in your Angular applications",
   "main": "Gruntfile.js",
   "scripts": {
